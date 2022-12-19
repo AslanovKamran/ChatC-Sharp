@@ -1,0 +1,34 @@
+﻿<Window x:Class="ChatClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatClient"
+        mc:Ignorable="d"
+        
+        Title="MainWindow" Height="450" Width="400" FontSize="25" WindowStartupLocation="CenterScreen" FontFamily="Century Gothic"> 
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.3*"></RowDefinition>
+            <RowDefinition Height="0.3*"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="0.3*"></RowDefinition>
+            <RowDefinition Height="0.3*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBox Padding="10" x:Name="ipTextBox" Width="266" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Text="{Binding Data.Ip}"/>
+        <TextBox Padding="10" x:Name="portTextBox" Width="133" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.Row="0" Grid.Column="1" Text="{Binding Data.Port}"/>
+
+        <TextBox Padding="10" x:Name="userNameTextBox" Width="266" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Text="{Binding User.UserName}"/>
+        <Button Padding="10" x:Name="connectButton" Width="133" Height="53" Grid.Row="1" Grid.Column="1" Foreground="White"  Cursor="Hand" Background="MediumSeaGreen" Click="ConnectButton_Click">Connect</Button>
+
+        <TextBox Padding="10" x:Name="messageTextBox" FontSize="18" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Message.Content}"/>
+        <Button x:Name="sendButton" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Foreground="White" Cursor="Pen" Background="ForestGreen" Click="SendButton_Click">Send</Button>
+    </Grid>
+</Window>
