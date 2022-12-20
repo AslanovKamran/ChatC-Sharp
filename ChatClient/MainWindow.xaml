@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatClient"
         mc:Ignorable="d"
-        
-        Title="MainWindow" Height="450" Width="400" FontSize="25" WindowStartupLocation="CenterScreen" FontFamily="Century Gothic"> 
+       Closing="Window_Closing"
+        Title="MainWindow" Height="450" Width="450" FontSize="25" WindowStartupLocation="CenterScreen" FontFamily="Century Gothic">
+
+
+
     <Grid>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="0.3*"></RowDefinition>
             <RowDefinition Height="0.3*"></RowDefinition>
@@ -23,12 +26,48 @@
         </Grid.ColumnDefinitions>
 
         <TextBox Padding="10" x:Name="ipTextBox" Width="266" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Text="{Binding Data.Ip}"/>
-        <TextBox Padding="10" x:Name="portTextBox" Width="133" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.Row="0" Grid.Column="1" Text="{Binding Data.Port}"/>
+        <TextBox Padding="10" x:Name="portTextBox" Width="135" HorizontalAlignment="Left" VerticalAlignment="Center"  Grid.Row="0" Grid.Column="1" Text="{Binding Data.Port}"/>
 
         <TextBox Padding="10" x:Name="userNameTextBox" Width="266" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Text="{Binding User.UserName}"/>
-        <Button Padding="10" x:Name="connectButton" Width="133" Height="53" Grid.Row="1" Grid.Column="1" Foreground="White"  Cursor="Hand" Background="MediumSeaGreen" Click="ConnectButton_Click">Connect</Button>
+
+
+        <Button FontSize="10" Padding="10" x:Name="disconnectButton" Width="135" HorizontalAlignment="Left" Height="53"  Grid.Column="1"  Grid.Row="1" Foreground="White"  Cursor="Hand" Background="Red" Click="DisconnectButton_Click" Content="Close">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ConnectionHandler.Connected}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+
+
+
+
+        <Button FontSize="10" Padding="10" x:Name="connectButton" Width="135" HorizontalAlignment="Left" Height="53"  Foreground="White" Grid.Column="1" Grid.Row="1" Cursor="Hand" Background="MediumSeaGreen" Click="ConnectButton_Click" Content="Connect">
+
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ConnectionHandler.Connected}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+
+
+        <ListBox FontSize="15" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding MessageList}"/>
+
+
 
         <TextBox Padding="10" x:Name="messageTextBox" FontSize="18" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Message.Content}"/>
-        <Button x:Name="sendButton" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Foreground="White" Cursor="Pen" Background="ForestGreen" Click="SendButton_Click">Send</Button>
+        <Button IsEnabled="{Binding ConnectionHandler.Connected}" x:Name="sendButton" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Foreground="White" Cursor="Pen" Background="ForestGreen" Click="SendButton_Click" Content="Send"/>
     </Grid>
 </Window>

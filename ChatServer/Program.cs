@@ -2,14 +2,12 @@
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace ChatServer
 {
 	internal class Program
 	{
-		static Dictionary<string, TcpClient> Clients = new();
-
+		static List<User> Clients = new();
 
 		static void Main(string[] args)
 		{
@@ -28,12 +26,13 @@ namespace ChatServer
 
 				Task.Run(async () =>
 				{
-					var random = new Random().Next(1,16);
+					var random = new Random().Next(1, 16);
 					var userName = string.Empty;
+					var connected = true;
 
 					using (StreamReader reader = new(client.GetStream()))
 					{
-						while (true)
+						while (connected)
 						{
 							try
 							{
@@ -48,10 +47,32 @@ namespace ChatServer
 											{
 												userName = message.Content;
 												ShowMessage(ConsoleColor.DarkGreen, $"==Client {message.Content} accepted==");
-												Clients.Add(message.Content, client);
+												Clients.Add(new User
+													(
+														userName, 
+														new StreamReader(client.GetStream()), 
+														new StreamWriter(client.GetStream()))
+													);
 											}
 											break;
-										case "Message": { ShowMessage((ConsoleColor)random, $"{userName}: {message.Content}"); } break;
+										case "Message":
+											{
+												ShowMessage((ConsoleColor)random, $"{userName}: {message.Content}");
+												await BroadCastMessage(userName +": " + message.Content);
+											}
+											break;
+
+										case "Disconnect": 
+											{
+												var disconnected = Clients.FirstOrDefault((x) => x.Name == userName);
+												if(disconnected is not null)
+													Clients.Remove(disconnected);
+												
+												ShowMessage(ConsoleColor.Red, $"User {userName} has disconnected");
+												connected = false;
+
+											}
+											break;
 										default: { } break;
 									}
 								}
@@ -78,6 +99,15 @@ namespace ChatServer
 			Console.ForegroundColor = color;
 			Console.WriteLine(message);
 			Console.ResetColor();
+		}
+
+		private static async Task BroadCastMessage(string message)
+		{
+			foreach (var client in Clients)
+			{
+				await client.Writer.WriteLineAsync(message);
+				
+			}
 		}
 	}
 }
